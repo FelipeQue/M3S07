@@ -1,0 +1,34 @@
+services:
+
+    database:
+        image: 'postgres:latest'
+        ports:
+          - "5432:5432"
+        environment:
+          - POSTGRES_PASSWORD=minhaSenha
+          - POSTGRES_USERNAME=meuUsuario
+        volumes:
+          - ${PWD}/db-data/:/var/lib/postgresql/data
+        networks:
+          - postgres-network
+
+    pgadmin:
+      image: dpage/pgadmin4
+      ports:
+        - 15433:80
+      environment:
+        - PGADMIN_DEFAULT_EMAIL=andre@gmail.com
+        - PGADMIN_DEFAULT_PASSWORD=aaa
+      depends_on:
+        - database
+      networks:
+        - postgres-network
+      volumes:
+        - ${PWD}/pgadmin-data/:/var/lib/pgadmin/
+
+networks:
+  postgres-network:
+    driver: bridge
+
+#Para executar o docker-compose.yml:
+#docker-compose up
