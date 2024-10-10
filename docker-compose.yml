@@ -1,9 +1,21 @@
 services:
 
-    database:
+  spring-app:
+    image: felipeque/hello-docker:0.1
+#    build:
+#      context: .
+#      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    depends_on:
+      - database
+    networks:
+      - postgres-network
+
+  database:
         image: 'postgres:latest'
         ports:
-          - "5432:5432"
+          - "15432:5432"
         environment:
           - POSTGRES_PASSWORD=minhaSenha
           - POSTGRES_USERNAME=meuUsuario
@@ -12,7 +24,7 @@ services:
         networks:
           - postgres-network
 
-    pgadmin:
+  pgadmin:
       image: dpage/pgadmin4
       ports:
         - 15433:80
