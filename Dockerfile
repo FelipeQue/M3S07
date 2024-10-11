@@ -1,26 +1,24 @@
+FROM openjdk:21-slim-buster AS build
+
+LABEL authors="Felipe Q."
+
+# Traz todos os arquivos onde o Dockerfile está
+COPY . .
+
+# Transforma o mvnw em executável
+RUN chmod 700 mvnw
+
+RUN ./mvnw clean package
+
+
 FROM openjdk:21-slim-buster
-# Sistema operacional base
-# Linux + Open JDK 17
-# É uma outra imagem docker
 
-LABEL authors="andre"
-#Adiciona o métadado autor
+WORKDIR app
 
-WORKDIR /app
-# app é a pasta onde o código irá ficar
-
-COPY target/*.jar app.jar
-# Ele copia qualquer arquivo .jar da pasta target
-# Esse arquivo dento do docker irá se chamar app.jar
+COPY --from=build target/*.jar app.jar
 
 ENV SERVER_PORT=8080
-# Variavel de ambiente da porta 8080
-# Essa variavel subistitui a server.port do application.properties
 
 EXPOSE 8080
-# A porta 8080 está exposta para o Docker
-# Não para a maquina ainda
 
 ENTRYPOINT ["java", "-jar", "app.jar"]
-# java -jar app.jar -> comando no Bash Linux
-# comando usando o openJDK do linux para executar o jar dentro da pasta app
